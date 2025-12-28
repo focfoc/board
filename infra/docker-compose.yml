@@ -1,0 +1,20 @@
+version: "3.8"
+
+name: board
+services:
+  mysql:
+    image: mysql:8.4.7
+    container_name: board-test-mysql
+    ports:
+      - "3306:3306"
+    volumes:
+      # 데이터 영속성 필요시 주석 해제 - mysql_data:/var/lib/mysql
+      - ../sql/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+    environment:
+      MYSQL_ROOT_PASSWORD: root1234
+      MYSQL_DATABASE: board_test
+      MYSQL_USER: app
+      MYSQL_PASSWORD: app1234
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci

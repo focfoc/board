@@ -1,0 +1,55 @@
+# ===== OS / Editor =====
+.DS_Store
+Thumbs.db
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+
+# VS Code
+.vscode/
+
+# ===== Java / Gradle =====
+*.class
+*.log
+
+.gradle/
+build/
+
+# ===== Spring Boot =====
+# 기본적으로 build/에 포함되지만, 별도 디렉토리 쓰는 경우 대비
+logs/
+tmp/
+
+# ===== Test / Coverage =====
+/outTest/
+coverage/
+*.exec
+
+# ===== Environment / Secrets =====
+.env
+.env.*
+application-*.yml
+application-*.yaml
+application-*.properties
+
+# 프로젝트 설정 템플릿
+!application.yml
+!application.yaml
+!application.properties
+
+# ===== Docker =====
+**/docker-data/
+**/*.pid
+
+# ===== Database local files =====
+*.db
+*.sqlite
+*.sqlite3
+
+# ===== Misc =====
+*.swp
+*.swo
