@@ -2,6 +2,7 @@ package com.example.board.article.service;
 
 import com.example.board.article.exception.ArticleNotFoundException;
 import com.example.board.article.repository.ArticleRepository;
+import com.example.board.article.viewcount.service.ViewCountService;
 import com.example.board.domain.Article;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import java.util.List;
 public class ArticleService {
 
     private final ArticleRepository articleRepository;
+    private final ViewCountService viewCountService;
 
     public List<Article> findAll(){
         return articleRepository.findAll();
@@ -23,6 +25,12 @@ public class ArticleService {
     public Article findById(Long id){
         return articleRepository.findByArticleNo(id)
                 .orElseThrow(() -> new ArticleNotFoundException(id));
+    }
+
+    @Transactional
+    public Article read(Long id){
+        viewCountService.increaseViewCount(id);
+        return findById(id);
     }
 
     @Transactional
