@@ -2,6 +2,7 @@ package com.example.board.article.service;
 
 import com.example.board.article.exception.ArticleNotFoundException;
 import com.example.board.article.repository.ArticleRepository;
+import com.example.board.article.viewcount.service.ViewCountService;
 import com.example.board.domain.Article;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -21,10 +22,11 @@ public class ArticleServiceTest {
     @Mock
     private ArticleRepository articleRepository;
     private ArticleService articleService;
+    private ViewCountService viewCountService;
 
     @BeforeEach
     void setUp() {
-        articleService = new ArticleService(articleRepository);
+        articleService = new ArticleService(articleRepository, viewCountService);
     }
 
     @Test
