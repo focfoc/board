@@ -8,7 +8,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CountDownLatch;
@@ -18,13 +17,13 @@ import java.util.concurrent.Executors;
 import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
-public class ViewCountServiceIntegrationTest {
+public abstract class ViewCountIntegrationTest {
 
     @Autowired
-    private ArticleService articleService;
+    ArticleService articleService;
 
     @Autowired
-    private ViewCountService viewCountService;
+    ViewCountService viewCountService;
 
     @Autowired
     EntityManager em;
@@ -34,8 +33,8 @@ public class ViewCountServiceIntegrationTest {
     void incrementViewCount_success(){
         //given
         Article article = new Article("테스트입니다");
-        articleService.save(article);
-        Long id = article.getArticleNo();
+        Article saveArticle = articleService.save(article);
+        Long id = saveArticle.getArticleNo();
 
         //when
         articleService.read(id);
@@ -51,8 +50,8 @@ public class ViewCountServiceIntegrationTest {
         //given
         int threadCnt = 200;
         Article article = new Article("테스트입니다");
-        articleService.save(article);
-        Long id = article.getArticleNo();
+        Article saveArticle = articleService.save(article);
+        Long id = saveArticle.getArticleNo();
         ExecutorService executorService = Executors.newFixedThreadPool(32);
 
         CountDownLatch startLatch = new CountDownLatch(1);
@@ -66,6 +65,7 @@ public class ViewCountServiceIntegrationTest {
                 try {
                     startLatch.await();
                     articleService.read(id);
+                    //viewCountService.increaseViewCount(id);
                 } catch (Throwable t) {
                     errors.add(t);
                 } finally {

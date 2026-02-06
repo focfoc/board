@@ -7,6 +7,9 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: app
     password: app1234
+    hikari:
+      maximum-pool-size: 32
+      connection-timeout: 30000
 
   jpa:
     show-sql: true
