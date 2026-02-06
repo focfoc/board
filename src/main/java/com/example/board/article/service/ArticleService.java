@@ -29,13 +29,14 @@ public class ArticleService {
 
     @Transactional
     public Article read(Long id){
+        Article article = findById(id);
         viewCountService.increaseViewCount(id);
-        return findById(id);
+        return article;
     }
 
     @Transactional
-    public void save(Article article){
-        articleRepository.save(article);
+    public Article save(Article article){
+        return articleRepository.save(article);
     }
 
     @Transactional

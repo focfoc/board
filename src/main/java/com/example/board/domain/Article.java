@@ -28,7 +28,7 @@ public class Article {
 
     @Version
     @Column(nullable = false)
-    private Integer version;
+    private Integer version = 0;
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
@@ -47,6 +47,10 @@ public class Article {
         if (title == null || title.isBlank()) {
             throw new IllegalArgumentException("제목은 필수입니다.");
         }
+    }
+
+    public void incrementViewCount(){
+        this.viewCount = this.viewCount + 1;
     }
 
     public void updateTitle(String title){
