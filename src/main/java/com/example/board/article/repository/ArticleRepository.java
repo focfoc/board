@@ -27,4 +27,12 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
             """)
     int incrementViewCount(@Param("articleNo") Long articleNo);
 
+    @Modifying(clearAutomatically = true)
+    @Query(""" 
+            update Article a
+            set a.viewCount = a.viewCount + :increment
+            where a.articleNo = :articleNo
+            """)
+    int updateViewCount(@Param("articleNo") Long articleNo, @Param("increment") Long increment);
+
 }
