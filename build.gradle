@@ -14,6 +14,10 @@ java {
 	}
 }
 
+ext {
+    shedlockVersion = "7.6.0"
+}
+
 repositories {
 	mavenCentral()
 }
@@ -34,6 +38,10 @@ dependencies {
 
     // redis
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+    //shedlock
+    implementation "net.javacrumbs.shedlock:shedlock-spring:${shedlockVersion}"
+    implementation "net.javacrumbs.shedlock:shedlock-provider-redis-spring:${shedlockVersion}"
 
     // Test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
