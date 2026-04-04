@@ -24,7 +24,7 @@ public class ArticleController {
 
     @GetMapping("/{id}")
     public Article getArticle(@PathVariable Long id) {
-        return articleService.findById(id);
+        return articleService.read(id);
     }
 
     @PostMapping
