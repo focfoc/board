@@ -24,3 +24,15 @@ services:
     ports:
       - "6379:6379"
     # restart: always
+  k6: # docker compose --profile loadtest run --rm k6
+    image: grafana/k6:latest
+    container_name: board-k6
+    profiles: ["loadtest"]
+    volumes:
+      - ../k6:/scripts
+    working_dir: /scripts
+    command: run /scripts/hot-key.js
+    environment:
+      BASE_URL: http://host.docker.internal:8080
+      ARTICLE_NO: "1"
+      PATH_TEMPLATE: /articles/{articleNo}
