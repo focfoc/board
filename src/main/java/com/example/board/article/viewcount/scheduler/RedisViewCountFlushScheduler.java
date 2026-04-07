@@ -2,7 +2,6 @@ package com.example.board.article.viewcount.scheduler;
 
 import com.example.board.article.repository.ArticleRepository;
 import lombok.RequiredArgsConstructor;
-import net.javacrumbs.shedlock.core.LockAssert;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
@@ -26,8 +25,8 @@ public class RedisViewCountFlushScheduler {
     private final ArticleRepository articleRepository;
     private final FlushTestHook flushTestHook;
 
-    private final String key = "article:views";
-    private final String syncKeyPrefix = "article:view:sync";
+    private static final String KEY = "article:views";
+    private static final String SYNC_KEY_PREFIX = "article:view:sync";
 
     @Scheduled(fixedDelay = 60 * 1000)
     @SchedulerLock(name = "flushViewCount")
@@ -39,10 +38,10 @@ public class RedisViewCountFlushScheduler {
 
         flushTestHook.beforeFlush();
 
-        if(!redisTemplate.hasKey(key)) return;
+        if(!redisTemplate.hasKey(KEY)) return;
 
-        String syncKey = syncKeyPrefix + System.currentTimeMillis() + ":" + UUID.randomUUID();
-        redisTemplate.rename(key, syncKey);
+        String syncKey = SYNC_KEY_PREFIX + System.currentTimeMillis() + ":" + UUID.randomUUID();
+        redisTemplate.rename(KEY, syncKey);
 
         flushTestHook.afterRename();
 
@@ -52,7 +51,7 @@ public class RedisViewCountFlushScheduler {
 
     public void recoverSyncKeys(){
         ScanOptions scanOptions = ScanOptions.scanOptions()
-                            .match(syncKeyPrefix + "*").count(100).build();
+                            .match(SYNC_KEY_PREFIX + "*").count(100).build();
         Cursor<String> cursor = redisTemplate.scan(scanOptions);
         while(cursor.hasNext()){
             String syncKey = cursor.next();
