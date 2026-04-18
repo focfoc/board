@@ -1,31 +1,11 @@
 viewcount:
   strategy: db
 
-logging:
-  file:
-    name: logs/app.log
-  level:
-    root: INFO
-
 spring:
   application:
     name: board
-
-  datasource:
-    url: jdbc:mysql://localhost:3306/board_test
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    username: app
-    password: app1234
-    hikari:
-      maximum-pool-size: 32
-      connection-timeout: 30000
 
   jpa:
     show-sql: true
     hibernate:
       ddl-auto: none
-
-  data:
-    redis:
-      host: localhost
-      port: 6379

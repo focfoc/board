@@ -32,9 +32,6 @@ coverage/
 # ===== Environment / Secrets =====
 .env
 .env.*
-application-*.yml
-application-*.yaml
-application-*.properties
 
 # 프로젝트 설정 템플릿
 !application.yml
