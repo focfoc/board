@@ -23,7 +23,7 @@ services:
       - "3306:3306"
     volumes:
       # 데이터 영속성 필요시 주석 해제 - mysql_data:/var/lib/mysql
-      - ../sql/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+      - ../src/main/resources/schema.sql:/docker-entrypoint-initdb.d/schema.sql
     environment:
       MYSQL_ROOT_PASSWORD: root1234
       MYSQL_DATABASE: board_test

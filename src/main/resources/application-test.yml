@@ -1,0 +1,12 @@
+app:
+  scheduler:
+    enabled: false
+
+spring:
+  main:
+    allow-bean-definition-overriding: true
+
+  sql:
+    init:
+      mode: always
+      platform: mysql

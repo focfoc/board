@@ -16,6 +16,7 @@ java {
 
 ext {
     shedlockVersion = "7.6.0"
+    testcontainersVersion = "2.0.5"
 }
 
 repositories {
@@ -45,9 +46,15 @@ dependencies {
 
     // Test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testRuntimeOnly 'org.testcontainers:junit-jupiter'
+
+    testImplementation platform("org.testcontainers:testcontainers-bom:${testcontainersVersion}")
+    testImplementation "org.testcontainers:testcontainers-junit-jupiter"
+    testImplementation 'org.testcontainers:testcontainers'
+    testImplementation "org.testcontainers:testcontainers-mysql"
 }
 
 tasks.named('test') {
-	useJUnitPlatform()
+    useJUnitPlatform {
+        excludeTags 'experiment'
+    }
 }
