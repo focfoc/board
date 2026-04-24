@@ -3,11 +3,15 @@ package com.example.board.article.viewcount;
 import com.example.board.article.service.ArticleService;
 import com.example.board.article.viewcount.service.ViewCountService;
 import com.example.board.domain.Article;
+import com.example.board.testsupport.MySqlContainerTestSupport;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +20,13 @@ import java.util.concurrent.*;
 import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
+@ActiveProfiles("test")
 public abstract class ViewCountIntegrationTest {
+
+    @DynamicPropertySource
+    static void mysqlProps(DynamicPropertyRegistry registry) {
+        MySqlContainerTestSupport.registerMysqlProperties(registry);
+    }
 
     @Autowired
     ArticleService articleService;

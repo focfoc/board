@@ -5,13 +5,19 @@ import com.example.board.article.viewcount.scheduler.RenameBlockHook;
 import com.example.board.article.viewcount.scheduler.FlushDelayTestConfig;
 import com.example.board.article.viewcount.scheduler.RedisViewCountFlushScheduler;
 import com.example.board.domain.Article;
+import com.example.board.testsupport.MySqlContainerTestSupport;
+import com.example.board.testsupport.RedisContainerTestSupport;
 import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.TestPropertySource;
 
 import java.util.concurrent.*;
@@ -20,9 +26,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
 @Import(FlushDelayTestConfig.class)
-@TestPropertySource(properties = "viewcount.strategy=redis")
 @SpringBootTest
-public class RedisFlushTest {
+@ActiveProfiles("test")
+@TestPropertySource(properties = "viewcount.strategy=redis")
+@TestPropertySource(properties = "spring.task.scheduling.enabled=true")
+public class RedisFlushTest{
+
+    @DynamicPropertySource
+    static void redisProps(DynamicPropertyRegistry registry) {
+        RedisContainerTestSupport.registerRedisProperties(registry);
+        MySqlContainerTestSupport.registerMysqlProperties(registry);
+    }
 
     @Autowired
     RedisViewCountFlushScheduler redisScheduler;
@@ -35,6 +49,12 @@ public class RedisFlushTest {
 
     @Autowired
     EntityManager em;
+
+    @BeforeEach
+    void setUp() {
+        //초기화
+        renameBlockHook.reset();
+    }
 
     @Test
     @DisplayName("분산락 확인: 데이터 누락 검증")
@@ -90,9 +110,6 @@ public class RedisFlushTest {
         Long id = saveArticle.getArticleNo();
 
         ExecutorService executorService = Executors.newFixedThreadPool(threadCnt);
-
-        //초기화
-        renameBlockHook.reset();
 
         //when
         for(int i = 0; i < requestCnt; i++){

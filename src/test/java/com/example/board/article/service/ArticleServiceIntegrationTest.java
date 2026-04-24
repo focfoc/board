@@ -2,18 +2,28 @@ package com.example.board.article.service;
 
 import com.example.board.article.exception.ArticleNotFoundException;
 import com.example.board.domain.Article;
+import com.example.board.testsupport.MySqlContainerTestSupport;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
+@ActiveProfiles("test")
 @Transactional
 public class ArticleServiceIntegrationTest {
+
+    @DynamicPropertySource
+    static void mysqlProps(DynamicPropertyRegistry registry) {
+        MySqlContainerTestSupport.registerMysqlProperties(registry);
+    }
 
     @Autowired
     private ArticleService articleService;
@@ -29,8 +39,8 @@ public class ArticleServiceIntegrationTest {
         Article article = new Article("테스트입니다");
 
         //when
-        articleService.save(article);
-        Long id = article.getArticleNo();
+        Article saveArticle = articleService.save(article);
+        Long id = saveArticle.getArticleNo();
 
         //then
         em.flush();
@@ -47,8 +57,8 @@ public class ArticleServiceIntegrationTest {
 
         //given
         Article article = new Article("테스트입니다");
-        articleService.save(article);
-        Long id = article.getArticleNo();
+        Article saveArticle = articleService.save(article);
+        Long id = saveArticle.getArticleNo();
 
         //when
         articleService.update(id, "테스트를 수정했습니다.");
@@ -68,8 +78,8 @@ public class ArticleServiceIntegrationTest {
 
         //given
         Article article = new Article("테스트입니다.");
-        articleService.save(article);
-        Long id = article.getArticleNo();
+        Article saveArticle = articleService.save(article);
+        Long id = saveArticle.getArticleNo();
 
         //when
         articleService.delete(id);
